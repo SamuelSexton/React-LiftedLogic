@@ -51,35 +51,93 @@ export function AlbumCard(props){
 }
 
 export function SlideShow({cards}) {
-    const [currentCardIndex, setCurrentCardIndex] = useState(Math.floor((cards.length/2)));
-    const slideRef = useRef(null);
+    const [currentCardIndex, setCurrentCardIndex] = useState(0);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [translateX, setTranslateX] = useState(0);
+    const [cardWidth, setCardWidth] = useState(null);
+    const [isHoveredLeft, setIsHoveredLeft] = useState(false);
+    const [isHoveredRight, setIsHoveredRight] = useState(false);
+    const cardRef = useRef(null);
+   
+    
+    useEffect(() => {
+        if(cardRef.current){
+            setCardWidth(cardRef.current.getBoundingClientRect().width);
+        }
+    }, [currentCardIndex]);
+    
+    
+
+    useEffect(() => {
+        function handleResize() {
+          setWindowWidth(window.innerWidth);
+          setCurrentCardIndex(0);
+        }
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
+    
+    useEffect(() => {
+        setTranslateX(calculateTranslateX(windowWidth,cardWidth));
+        }, [windowWidth,cardWidth, currentCardIndex]);
+
+    function calculateTranslateX(width, card){
+        if(Math.floor(width/50) > 10){
+            return `${Math.floor((width - card)/2)}`;
+        }else{
+            return `-${Math.floor((width - card)/2)}`;
+        }
+    }
+    
 
     const handlePreviousClick = () => {
         setCurrentCardIndex(currentCardIndex - 1);
         setTimeout(() => {
-            
-            
-        }, 50);
+            setTranslateX(translateX+(cardWidth+50));
+        }, 10);
     }
 
     const handleNextClick = () => {
         setCurrentCardIndex(currentCardIndex + 1);
+        
         setTimeout(() => {
-            slideRef.current.style.transition = 'tranform 0.5s ease-in-out';
-            slideRef.current.style.tranform = 'translateX(-50%)';
-        }, 50);
+                setTranslateX(translateX-(cardWidth+50));
+        }, 10);
         
     }
     
 
     return (
         <div className='slide-show-container'>
-            <div ref={slideRef} className='slide-show'>
-                {cards.map(item => item)}
+            <div className='slide-show'
+            style={{
+              transform: `translateX(${translateX}px)`,
+              transition: 'transform 0.5s ease',
+            }}
+            >
+                {cards.map((item, index) => 
+                    <div key={index} className={`test ${index === currentCardIndex ? 'active' : ''}`}
+                    ref={index === currentCardIndex ? cardRef : null}>{item}</div>)}
             </div>
             <div className='button-container'>
-                <button onClick={handlePreviousClick} disabled={currentCardIndex === 0}><image.ArrowLeft/></button>
-                <button onClick={handleNextClick} disabled={currentCardIndex === cards.length - 1}><image.ArrowRight/></button>
+                <button onClick={handlePreviousClick} disabled={currentCardIndex === 0}
+                style={{backgroundColor: isHoveredLeft ? '#001D5D' : '#B8BFCF'}}
+                onPointerEnter={() => setIsHoveredLeft(true)}
+                onPointerLeave={() => setIsHoveredLeft(false)}
+                >
+                    <image.ArrowLeft fill={isHoveredLeft ? 'white' : 'black'}/>
+                </button>
+                <button onClick={handleNextClick} disabled={currentCardIndex === cards.length - 1}
+                style={{backgroundColor: isHoveredRight ? '#001D5D' : '#B8BFCF'}}
+                onPointerEnter={() => setIsHoveredRight(true)}
+                onPointerLeave={() => setIsHoveredRight(false)}
+                >
+                    <image.ArrowRight fill={isHoveredRight ? 'white' : 'black'}/>
+                </button>
             </div>
             
         </div>
@@ -191,21 +249,25 @@ export function Footer(props) {
                     : null}
                 </div>
                 <div className='footer-explore'>
+                    <h5 className='anchor-header'>Explore</h5>
                     {!(props.exploreAnchors) ? null :
                     props.exploreAnchors.length > 0 ? props.exploreAnchors.map(item => <a key={item.id} href={item.url}>{item.name}</a>)
                     : null}
                 </div>
                 <div className='footer-music'>
+                    <h5 className='anchor-header'>Music</h5>
                     {!(props.musicAnchors) ? null :
                         props.musicAnchors.length > 0 ? props.musicAnchors.map(item => <a key={item.id} href={item.url}>{item.name}</a>)
                         : null}
                 </div>
                 <div className='footer-artists'>
+                    <h5 className='anchor-header'>Artist</h5>
                     {!(props.artistAnchors) ? null :
                         props.artistAnchors.length > 0 ? props.artistAnchors.map(item => <a key={item.id} href={item.url}>{item.name}</a>)
                         : null}
                 </div>
                 <div className='footer-records'>
+                    <h5 className='anchor-header'>Records</h5>
                     {!(props.recordAnchors) ? null :
                         props.recordAnchors.length > 0 ? props.recordAnchors.map(item => <a key={item.id} href={item.url}>{item.name}</a>)
                         : null}

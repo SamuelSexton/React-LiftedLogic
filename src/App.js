@@ -80,10 +80,36 @@ const App = () => {
             Born in Louisville, Kentucky, he started his career in 2011, releasing the 
             debut mixtape titled Killer Instinct Vol.1.' 
         />,
+        < component.AlbumCard 
+            imgURL='Images/71RLkNIuZNL._SY355_.jpg'
+            album='Trapsoul'
+            artist='Brent Faiyez'
+            info='Bryson Djuan Tiller, is an American singer, songwriter and rapper. 
+            Born in Louisville, Kentucky, he started his career in 2011, releasing the 
+            debut mixtape titled Killer Instinct Vol.1.' 
+        />,
+        < component.AlbumCard 
+            imgURL='Images/71RLkNIuZNL._SY355_.jpg'
+            album='Trapsoul'
+            artist='Brent'
+            info='Bryson Djuan Tiller, is an American singer, songwriter and rapper. 
+            Born in Louisville, Kentucky, he started his career in 2011, releasing the 
+            debut mixtape titled Killer Instinct Vol.1.' 
+        />,
+        < component.AlbumCard 
+            imgURL='Images/71RLkNIuZNL._SY355_.jpg'
+            album='Trapsoul'
+            artist='Faiyez'
+            info='Bryson Djuan Tiller, is an American singer, songwriter and rapper. 
+            Born in Louisville, Kentucky, he started his career in 2011, releasing the 
+            debut mixtape titled Killer Instinct Vol.1.' 
+        />,
     ];
     return (
         <div className='mainContainer'>
             <div className='hero' style={{backgroundImage : `url(${heroBackground})`}}>
+                
+                    
                 
                 <component.NavBar/>
             
